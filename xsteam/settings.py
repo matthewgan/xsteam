@@ -25,6 +25,8 @@ SECRET_KEY = '52&zto355(dkk&%q3_0hpzjim=%29_8j3@6!+gce66dmp6z24t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ADMINS = [('Matthew Gan', 'matthewgan@126.com'), ]
+
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '47.100.49.250', 'api.xsteam.xyz', 'xsteam.xyz', '.xsteam.xyz']
 
 
@@ -38,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'jet',
     'django.contrib.admin',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'vendors',
+    'categories',
+    'courses',
 ]
 
 MIDDLEWARE = [
@@ -106,14 +113,56 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
+# This is defined here as a do-nothing function because we can't import
+# django.utils.translation -- that module depends on the settings.
+def gettext_noop(s):
+    return s
+
+
+LANGUAGES = (
+    ('en-us', gettext_noop('English')),
+    ('zh-hans', gettext_noop('Simplified Chinese')),
+    ('zh-hant', gettext_noop('Traditional Chinese')),
+)
+
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
+LOCALE_PATHS = []
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
 
+# Settings for language cookie
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_COOKIE_AGE = None
+LANGUAGE_COOKIE_DOMAIN = None
+LANGUAGE_COOKIE_PATH = '/'
+
+# Default content type and charset to use for all HttpResponse objects, if a
+# MIME type isn't manually specified. These are used to construct the
+# Content-Type header.
+DEFAULT_CONTENT_TYPE = 'text/html'
+DEFAULT_CHARSET = 'utf-8'
+
+# Encoding of files read from disk (template and initial SQL files).
+FILE_CHARSET = 'utf-8'
+
+# Email address that error messages come from.
+SERVER_EMAIL = 'matthewgan@126.com'
+
+# List of compiled regular expression objects representing User-Agent strings
+# that are not allowed to visit any page, systemwide. Use this for bad
+# robots/crawlers. Here are a few examples:
+import re
+DISALLOWED_USER_AGENTS = [
+    re.compile(r'^NaverBot.*'),
+    re.compile(r'^EmailSiphon.*'),
+    re.compile(r'^SiteSucker.*'),
+    re.compile(r'^sohu-search'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -121,4 +170,62 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+# Make the default authenication mechanism for Django
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    # 'PAGE_SIZE': 10,
+    # 'DEFAULT_PAGINATION_CLASS': (
+    #     'rest_framework.pagination.PageNumberPagination',
+    # ),
+}
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'applogfile': {
+                'level': 'DEBUG',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': os.path.join(BASE_DIR, 'smartshop.log'),
+                'maxBytes': 1024*1024*15,
+                'backupCount': 10,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'xsteam': {
+            'handlers': ['applogfile', ],
+            'level': 'DEBUG',
+        },
+    }
+}
