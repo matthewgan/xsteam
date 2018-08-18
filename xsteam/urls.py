@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', include(admin.site.urls)),
-]
+    url(r'^token/', include('tokens.urls')),
+    url(r'^vendor/', include('vendors.urls')),
+    url(r'category/', include('categories.urls')),
+    url(r'course/', include('courses.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
