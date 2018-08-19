@@ -23,7 +23,6 @@ class Customer(models.Model):
     level = models.IntegerField(default=0)
     point = models.IntegerField(default=0)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    faceExisted = models.BooleanField(default=False)
     createTime = models.DateTimeField(auto_now_add=True)
     updateTime = models.DateTimeField(auto_now=True)
 

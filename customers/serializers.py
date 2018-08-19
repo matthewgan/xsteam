@@ -15,7 +15,7 @@ class SignupRequestSerializer(serializers.ModelSerializer):
 class SignupResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('id', 'point', 'level', 'balance', 'faceExisted')
+        fields = ('id', 'point', 'level', 'balance')
         read_only_fields = ('id', 'balance', )
 
 
