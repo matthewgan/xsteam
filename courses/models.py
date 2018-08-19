@@ -25,6 +25,7 @@ class Course(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     expire = models.DateField(default=datetime.date.today)
+    service = models.CharField(max_length=100, default="可退货")
 
     def __str__(self):
         return self.cid

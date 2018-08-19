@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'vendors',
     'categories',
     'courses',
+    'customers',
 ]
 
 MIDDLEWARE = [
