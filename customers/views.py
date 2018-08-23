@@ -150,3 +150,12 @@ class CustomerListView(ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerListSerializer
     permission_classes = (IsAdminUser,)
+
+
+class CustomerPointUpdateView(APIView):
+    def post(self,request):
+        wuser = Customer.objects.get(pk=request.data['user_id'])
+        wuser.point = wuser.point + request.data['user_point']
+        wuser.save()
+
+        return Response(status=status.HTTP_202_ACCEPTED)

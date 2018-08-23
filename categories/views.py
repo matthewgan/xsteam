@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .models import Category
 from .serializers import CategorySerializer
 from courses.models import Course
-from courses.serializers import CourseSerializer
+from courses.serializers import CourseSerializer, IndexNavResponseSerializer
 
 
 class CategoryListView(generics.ListAPIView):
@@ -22,5 +22,5 @@ class CategoryCourseListView(APIView):
 
     def get(self, request, pk, format=None):
         courses = self.get_objects(pk)
-        serializer = CourseSerializer(courses, many=True)
+        serializer = IndexNavResponseSerializer(courses, many=True)
         return Response(serializer.data)
