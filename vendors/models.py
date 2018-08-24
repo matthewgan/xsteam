@@ -34,7 +34,7 @@ class Vendor(models.Model):
     linkman = models.CharField(max_length=20)
     cellphone = models.DecimalField(max_digits=11, decimal_places=0)
     logo = models.ImageField(upload_to=upload_logo_location)
-    business_license = models.FileField(upload_to=upload_license_location)
+    business_license = models.FileField(upload_to=upload_license_location, blank=True)
     education_permit = models.FileField(upload_to=upload_permit_location, null=True, blank=True)
     rental_contract = models.FileField(upload_to=upload_rental_location, null=True, blank=True)
 

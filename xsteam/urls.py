@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^token/', include('tokens.urls')),
     url(r'^vendor/', include('vendors.urls')),
     url(r'category/', include('categories.urls')),

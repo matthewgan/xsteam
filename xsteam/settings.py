@@ -36,9 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'jet',
+    'registration',
     'django.contrib.admin',
     'rest_framework',
     'rest_framework.authtoken',
@@ -46,6 +48,15 @@ INSTALLED_APPS = [
     'categories',
     'courses',
 ]
+
+# Settings for registration
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+REGISTRATION_OPEN = True
+SIMPLE_BACKEND_REDIRECT_URL = '/accounts/login/'
+
+# django site control
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +73,7 @@ ROOT_URLCONF = 'xsteam.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
