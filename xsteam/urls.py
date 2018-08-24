@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^vendor/', include('vendors.urls')),
     url(r'category/', include('categories.urls')),
     url(r'course/', include('courses.urls')),
+    url(r'customer/', include('customers.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

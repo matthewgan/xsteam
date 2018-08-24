@@ -4,22 +4,22 @@ from django.db import models
 
 def upload_logo_location(instance, filename):
     extension = filename.split(".")[-1]
-    return "%s/%s.%s" % (instance.vid, "logo", extension)
+    return "%s/%s.%s" % (instance.company, "logo", extension)
 
 
 def upload_permit_location(instance, filename):
     extension = filename.split(".")[-1]
-    return "%s/%s.%s" % (instance.vid, "cert", extension)
+    return "%s/%s.%s" % (instance.company, "cert", extension)
 
 
 def upload_license_location(instance, filename):
     extension = filename.split(".")[-1]
-    return "%s/%s.%s" % (instance.vid, "license", extension)
+    return "%s/%s.%s" % (instance.company, "license", extension)
 
 
 def upload_rental_location(instance, filename):
     extension = filename.split(".")[-1]
-    return "%s/%s.%s" % (instance.vid, "rental", extension)
+    return "%s/%s.%s" % (instance.company, "rental", extension)
 
 
 # Create your models here.
@@ -34,7 +34,7 @@ class Vendor(models.Model):
     linkman = models.CharField(max_length=20)
     cellphone = models.DecimalField(max_digits=11, decimal_places=0)
     logo = models.ImageField(upload_to=upload_logo_location)
-    business_license = models.FileField(upload_to=upload_license_location, blank=True)
+    business_license = models.FileField(upload_to=upload_license_location)
     education_permit = models.FileField(upload_to=upload_permit_location, null=True, blank=True)
     rental_contract = models.FileField(upload_to=upload_rental_location, null=True, blank=True)
 
@@ -43,4 +43,4 @@ class Vendor(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.vid
+        return self.company

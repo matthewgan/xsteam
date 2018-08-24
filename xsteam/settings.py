@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'vendors',
     'categories',
     'courses',
+    'customers',
 ]
 
 # Settings for registration
