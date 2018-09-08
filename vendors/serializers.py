@@ -15,3 +15,9 @@ class VendorSerializer(serializers.ModelSerializer):
             'linkman',
             'logo',
         ]
+
+
+class VendorEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = ('company', 'address', 'city', 'province', 'country', 'region','linkman', 'cellphone')

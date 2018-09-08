@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>机构主页</title>
+</head>
+
+<body>
+	<div id="app">
+		<el-container style="height: 800px; border: 3px solid #eee">
+			<el-header style="background-color: dodgerblue">
+				<h1 style="color: white; font-family: 'microsoft yahei'; text-align: center;">XSTEAM 教育机构管理</h1>
+			</el-header>
+			<el-container>
+				<el-aside style="width: 400px; border: 3px solid #eee">
+					<h2 style="font-family: 'microsoft yahei'; text-align: center;">{{name}} 欢迎</h2>
+					<el-form :model="vendorForm" :rules="vendorRules" ref="vendorForm" label-width="100px" v-if="isAuth" style="width:350px">
+						<el-form-item label="机构名称" prop="company">
+							<el-input type="text" v-model="vendorForm.company"></el-input>
+						</el-form-item>
+						<el-form-item label="所在省份" prop="province">
+							<el-input type="text" v-model="vendorForm.province"></el-input>
+						</el-form-item>
+						<el-form-item label="所在城市" prop="city">
+							<el-input type="text" v-model="vendorForm.city"></el-input>
+						</el-form-item>
+						<el-form-item label="所在区域" prop="region">
+							<el-input type="text" v-model="vendorForm.region"></el-input>
+						</el-form-item>
+						<el-form-item label="详细地址" prop="address">
+							<el-input type="text" v-model="vendorForm.address"></el-input>
+						</el-form-item>
+						<el-form-item label="联系人" prop="linkman">
+							<el-input type="text" v-model="vendorForm.linkman"></el-input>
+						</el-form-item>
+						<el-form-item label="手机号" prop="cellphone">
+							<el-input type="number" v-model="vendorForm.cellphone"></el-input>
+						</el-form-item>
+						
+						<el-form-item label="企业标识">
+							<el-upload
+							  class="upload-demo"
+							  action="https://api.xsteam.xyz/vendor/upLoadLogo/"
+							  :on-preview="handlePreview"
+							  :on-remove="handleRemove"
+							  :before-remove="beforeRemove"
+							  :file-list="fileList"
+							  :headers="headers"
+							  name="image"
+							  :data="data"
+							  list-type="picture">
+							  <el-button size="small" type="primary">上传</el-button>
+							  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+							</el-upload>
+						</el-form-item>
+						
+						<el-form-item label="营业执照">
+							<el-upload
+							class="upload-demo"
+							action="https://api.xsteam.xyz/vendor/upLoadBL/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							:file-list="fileList"
+							:headers="headers"
+							name="image"
+							:data="data"
+							list-type="picture">
+							<el-button size="small" type="primary">上传</el-button>
+							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+							</el-upload>
+						</el-form-item>
+						
+						<el-form-item label="教育许可">
+							<el-upload
+							class="upload-demo"
+							action="https://api.xsteam.xyz/vendor/upLoadEP/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							:file-list="fileList"
+							:headers="headers"
+							name="image"
+							:data="data"
+							list-type="picture">
+							<el-button size="small" type="primary">上传</el-button>
+							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+							</el-upload>
+						</el-form-item>
+						
+						<el-form-item label="租赁合同">
+							<el-upload
+							class="upload-demo"
+							action="https://api.xsteam.xyz/vendor/upLoadRC/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							:file-list="fileList"
+							:headers="headers"
+							name="image"
+							:data="data"
+							list-type="picture">
+							<el-button size="small" type="primary">上传</el-button>
+							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+							</el-upload>
+						</el-form-item>
+
+						<el-form-item>
+							<el-button type="primary" @click="submitForm('vendorForm')">提交</el-button>
+							<el-button @click="resetForm('vendorForm')">重置</el-button>
+						</el-form-item>
+					</el-form>
+				</el-aside>
+
+				<el-main style="border: 3px solid #eee">
+					<el-steps :active="1" align-center style="margin-top: 200px;" process-status="process">
+					<el-step title="提交信息" description="在线提交机构相关信息并上传相关文件"></el-step>
+					<el-step title="等待审核" description="等待相关信息经平台审核"></el-step>
+					<el-step title="添加课程" description="审核完成后可以在平台上进行课程的添加与查看"></el-step>
+					<el-step title="小程序同步" description="平台上添加完成的课程将同步显示在微信小程序中"></el-step>
+					</el-steps>			
+					</el-main>
+			</el-container>
+
+		</el-container>
+	</div>
+
+</body>
+</html>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+			show: false,
+			isAuth:"{{isAuth | safe}}",
+			username:"{{name | safe}}",
+			fileList:[],
+			vendorForm: {
+			  company: '',
+			  province: '',
+			  city: '',
+			  region: '',
+			  address: '',
+			  linkman: '',
+			  cellphone: '',
+			},
+			vendorRules: {
+			  company: [
+				{ required: true, message: '请输入机构名称', trigger: 'blur' },
+			  ],
+			  province: [
+				{ required: true, message: '请输入所在省份', trigger: 'blur' },
+			  ],
+			  city: [
+				{ required: true, message: '请输入所在城市', trigger: 'blur' }
+			  ],
+			  region: [
+				{required: true, message: '请输入所在区域', trigger: 'blur' }
+			  ],
+			  address: [
+				{ required: true, message: '请输入详细地址', trigger: 'blur' }
+			  ],
+			  linkman: [
+				{ required: true, message: '请输入联系人', trigger: 'blur' }
+			  ],
+			  cellphone: [
+			  { required: true, message: '请输入联系人手机号', trigger: 'blur' }
+			  ]
+			}
+        },
+        
+		methods:{
+			submitForm(formName) {
+				this.$refs[formName].validate((valid) => {
+				  var that = this
+				  axios.request({
+							method: "POST",
+							url: 'https://api.xsteam.xyz/vendor/edit/',
+							data: {
+									username: that.username,
+									company: that.vendorForm.company,
+									province: that.vendorForm.province,
+									city: that.vendorForm.city,
+									region: that.vendorForm.region,
+									address: that.vendorForm.address,
+									linkman: that.vendorForm.linkman,
+									cellphone: that.vendorForm.cellphone
+							},
+							headers: {
+									'Authorization': 'Token a3566cbb90abed40fdf53637b77f7f563ffc3ca3',
+									'content-type': 'application/json'
+							},
+					})
+				  .then(function (res) {
+							if (res.status === 201) {
+									that.resetForm(formName)
+									that.$message({
+									message: '提交成功，审核中',
+									type: 'success',
+								});
+								window.location.href = '/home/'
+							} else {
+									this.$message.error('添加错误，请确认后重试');
+							}
+
+					});
+					
+				});
+			},
+			resetForm(formName) {
+					this.$refs[formName].resetFields();
+			},
+			
+			handleRemove(file, fileList) {
+				console.log(file, fileList);
+			},
+		    handlePreview(file) {
+			    console.log(file);
+		    },
+
+		    beforeRemove(file, fileList) {
+			  return this.$confirm(`确定移除 ${ file.name }？`);
+		    },
+		
+		},
+		
+		computed:{
+			headers(){
+				return{
+					'Authorization': 'Token a3566cbb90abed40fdf53637b77f7f563ffc3ca3',
+				}
+			},
+			data(){
+				var name = "{{name | safe}}"
+				return{
+					'username':name
+				}
+			}
+		},
+    })
+</script>

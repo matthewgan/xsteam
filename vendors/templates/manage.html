@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>机构主页</title>
+</head>
+
+<body>
+	<div id="app">
+		<el-container style="height: 800px; border: 3px solid #eee">
+			<el-header style="background-color: #409EFF">
+				<h1 style="color: white; font-family: 'PingFang SC'; text-align: center;">XSTEAM 教育机构管理</h1>
+			</el-header>
+			<el-container>
+				<el-aside style="width: 400px; border: 3px solid #eee">
+					<el-row style="margin-top:10px">
+						<el-button type="danger" round icon="el-icon-error" @click="logout">登出</el-button>
+					</el-row>
+						<h2 style="font-family: 'PingFang SC'; text-align: center; color: #303133;">{{company}}</h2>
+						<h4 style="font-family: 'PingFang SC'; text-align: center; color: #606266;">上线课程列表</h4>
+						<el-table
+							:data="tableData"
+							stripe
+							style="width: 100%">
+							<el-table-column
+								prop="name"
+								label="课程名"
+								width="150">
+							</el-table-column>
+							<el-table-column
+								prop="code"
+								label="课程代码"
+								width="120">
+							</el-table-column>
+							<el-table-column
+								prop="price"
+								label="团购价"
+								width="120">
+							</el-table-column>
+						</el-table>
+				</el-aside>
+
+				<el-main style="border: 3px solid #eee">
+					<el-steps :active="3" align-center process-status="process" finish-status="success">
+					<el-step title="提交信息" description="在线提交机构相关信息并上传相关文件"></el-step>
+					<el-step title="等待审核" description="等待相关信息经平台审核"></el-step>
+					<el-step title="添加课程" description="审核完成后可以在平台上进行课程的添加与查看"></el-step>
+					<el-step title="小程序同步" description="平台上添加完成的课程将同步显示在微信小程序中"></el-step>
+					</el-steps>	
+					<h3 style="font-family: 'PingFang SC'; text-align: center; color: #606266;">添加新课程</h3>
+					<el-form :model="courseForm" :rules="courseRules" ref="courseForm" label-width="100px" style="width:800px">
+						<el-form-item label="课程名称" prop="name" required>
+							<el-input type="text" v-model="courseForm.name"></el-input>
+						</el-form-item>
+						<el-form-item label="课程代码" prop="code" required>
+							<el-input type="text" v-model="courseForm.code"></el-input>
+						</el-form-item>
+						
+						<el-form-item label="课程标签" prop="tag">
+							<el-select v-model="courseForm.tag" multiple placeholder="请选择标签" style="width:700px">
+								<el-option
+									v-for="item in tags"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						
+						<el-form-item label="原价" prop="price" required>
+							<el-input type="number" step="0.01" v-model="courseForm.price"></el-input>
+						</el-form-item>
+						<el-form-item label="团购价" prop="club_price" required>
+							<el-input type="number" step="0.01" v-model="courseForm.club_price"></el-input>
+						</el-form-item>
+						
+						<el-form-item label="课程类别" prop="category" required>
+							<el-select v-model="courseForm.category" placeholder="请选择类别">
+								<el-option
+									v-for="item in options"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						
+						<el-form-item label="一句话描述" prop="price_note" required>
+							<el-input type="text" v-model="courseForm.price_note"></el-input>
+						</el-form-item>
+						<el-form-item label="课程介绍" prop="description" required>
+							<el-input
+								type="textarea"
+								autosize
+								placeholder="请输入内容"
+								v-model="courseForm.description">
+							</el-input>
+						</el-form-item>
+						<el-form-item label="课程详情" prop="detail" required>
+							<el-input
+								type="textarea"
+								autosize
+								placeholder="请输入内容"
+								v-model="courseForm.detail">
+							</el-input>
+						</el-form-item>
+						
+						<el-form-item label="课程图片">
+							<el-upload
+							  class="upload-demo"
+								ref="uploadimg"
+							  action="https://api.xsteam.xyz/vendor/upLoadCourse/"
+							  :on-preview="handlePreview"
+							  :on-remove="handleRemove"
+							  :before-remove="beforeRemove"
+							  :file-list="fileList"
+							  :headers="headers"
+								:auto-upload="false"
+							  name="image"
+							  :data="data"
+							  list-type="picture">
+							  <el-button size="small" type="primary">上传</el-button>
+							  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+							</el-upload>
+						</el-form-item>
+				
+
+						<el-form-item>
+							<el-button type="primary" @click="submitForm('courseForm')">提交</el-button>
+							<el-button @click="resetForm('courseForm')">重置</el-button>
+						</el-form-item>
+					</el-form>
+					
+				</el-main>
+				
+			</el-container>
+		</el-container>
+	</div>
+
+</body>
+</html>
+
+<script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+				tags: [{
+					value: '环境好',
+					label: '环境好'
+				}, 
+				{
+					value: '位置好',
+					label: '位置好'
+				}, 
+				{
+					value: '老师亲切',
+					label: '老师亲切'
+				}, 
+				{
+					value: '酷炫',
+					label: '酷炫'
+				}],
+				options: [{
+					value: '科技',
+					label: '科技'
+				}, 
+				{
+					value: '艺术',
+					label: '艺术'
+				}, 
+				{
+					value: '活动',
+					label: '活动'
+				}, 
+				{
+					value: '比赛',
+					label: '比赛'
+				}],
+			value: '',
+			username:"{{name | safe}}",
+			fileList:[],
+			tableData:{{course_list | safe}},
+			courseForm: {
+			  name: '',
+			  code: '',
+			  tag: '',
+			  price: '',
+			  club_price: '',
+			  category: '',
+			  price_note: '',
+				description: '',
+				detail: '',
+			},
+			courseRules: {
+			  name: [
+				{ required: true, message: '请输入课程名称', trigger: 'blur' },
+			  ],
+			  code: [
+				{ required: true, message: '请输入课程代码', trigger: 'blur' },
+			  ],
+			  price: [
+				{ required: true, message: '请输入原价', trigger: 'blur' }
+			  ],
+				tag: [
+				{ required: true, message: '请选择标签', trigger: 'blur' }
+				],
+			  club_price: [
+				{ required: true, message: '请输入现价', trigger: 'blur' }
+			  ],
+			  category: [
+			  { required: true, message: '请选择所属目录', trigger: 'blur' }
+			  ],
+				price_note: [
+				{ required: true, message: '请输入一句话描述', trigger: 'blur' }
+				],
+				description: [
+				{ required: true, message: '请输入课程描述', trigger: 'blur' }
+				],
+				detail: [
+				{ required: true, message: '请输入课程详情', trigger: 'blur' }
+				],
+			}
+        },
+
+		methods:{
+			submitForm(formName) {
+				this.$refs[formName].validate((valid) => {
+				  var that = this
+				  axios.request({
+							method: "POST",
+							url: 'https://api.xsteam.xyz/vendor/addCourse/',
+							data: {
+									username: that.username,
+									name: that.courseForm.name,
+									code: that.courseForm.code,
+									tag: that.courseForm.tag,
+									price: that.courseForm.price,
+									club_price: that.courseForm.club_price,
+									category: that.courseForm.category,
+									price_note: that.courseForm.price_note,
+									description: that.courseForm.description,
+									detail: that.courseForm.detail,
+							},
+							headers: {
+									'Authorization': 'Token a3566cbb90abed40fdf53637b77f7f563ffc3ca3',
+									'content-type': 'application/json'
+							},
+					})
+				  .then(function (res) {
+							if (res.status === 201) {
+								  that.$refs.uploadimg.submit();
+									that.resetForm(formName)
+									that.$message({
+									message: '提交成功，审核中',
+									type: 'success',
+								});
+								window.location.href = '/home/'
+							} else {
+									that.$message.error('添加错误，请确认后重试');
+							}
+
+					});
+
+				});
+			},
+			resetForm(formName) {
+					this.$refs[formName].resetFields();
+			},
+
+			handleRemove(file, fileList) {
+				console.log(file, fileList);
+			},
+		    handlePreview(file) {
+			    console.log(file);
+		    },
+
+		    beforeRemove(file, fileList) {
+			  return this.$confirm(`确定移除 ${ file.name }？`);
+		    },
+				logout(){
+					window.location.href = '/login/'
+				}
+
+		},
+
+		computed:{
+			headers(){
+				return{
+					'Authorization': 'Token a3566cbb90abed40fdf53637b77f7f563ffc3ca3',
+				}
+			},
+			data(){
+				var code = this.courseForm.code
+				return{
+					'code':code
+				}
+			},
+		},
+    })
+</script>

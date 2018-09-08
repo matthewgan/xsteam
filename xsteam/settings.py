@@ -48,13 +48,14 @@ INSTALLED_APPS = [
     'categories',
     'courses',
     'customers',
+    'auth_api',
 ]
 
 # Settings for registration
-ACCOUNT_ACTIVATION_DAYS = 7
+# ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTO_LOGIN = True
 REGISTRATION_OPEN = True
-SIMPLE_BACKEND_REDIRECT_URL = '/accounts/login/'
+SIMPLE_BACKEND_REDIRECT_URL = '/vendor/create/'
 
 # django site control
 SITE_ID = 1
@@ -123,7 +124,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-Hans'
 
 
 # This is defined here as a do-nothing function because we can't import
@@ -180,10 +182,14 @@ DISALLOWED_USER_AGENTS = [
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
+STATICFILES_DIRS = (
+    [os.path.join(BASE_DIR, 'static')]
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+LOGIN_URL = '/login/'
 
 # Make the default authenication mechanism for Django
 REST_FRAMEWORK = {
@@ -241,3 +247,4 @@ LOGGING = {
         },
     }
 }
+

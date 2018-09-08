@@ -29,10 +29,14 @@ class Course(models.Model):
     showcase = models.ImageField("showcases", upload_to=upload_showcase_location)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    expire = models.DateField(default=datetime.date.today)
+    expire = models.DateTimeField(default=datetime.date.today)
     service = models.CharField(max_length=100, default="可退货")
     review_point = models.CharField(max_length=5, default="4.0")
     review_number = models.CharField(max_length=5, default="0")
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = '课程'
+        verbose_name_plural = '课程'

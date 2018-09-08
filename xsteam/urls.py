@@ -17,15 +17,24 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from django.views.decorators.csrf import ensure_csrf_cookie
+import vendors.views
 
 
 urlpatterns = [
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', include(admin.site.urls)),
+    # url(r'^$', ensure_csrf_cookie(TemplateView.as_view(template_name=''))),
     url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^auth_api/', include('auth_api.urls')),
     url(r'^token/', include('tokens.urls')),
     url(r'^vendor/', include('vendors.urls')),
-    url(r'category/', include('categories.urls')),
-    url(r'course/', include('courses.urls')),
-    url(r'customer/', include('customers.urls')),
+    url(r'^category/', include('categories.urls')),
+    url(r'^course/', include('courses.urls')),
+    url(r'^customer/', include('customers.urls')),
+    url(r'^register/', vendors.views.register, name="注册"),
+    url(r'^login/', vendors.views.login, name="登录"),
+    url(r'^logout/', vendors.views.logout, name="登出"),
+    url(r'^home/', vendors.views.home, name="主页"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

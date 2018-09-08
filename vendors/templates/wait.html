@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>等待审核</title>
+</head>
+
+<body>
+	<div id="app">
+		<el-container style="height: 800px; border: 3px solid #eee">
+			
+			<el-header style="background-color: dodgerblue">
+				
+				<h1 style="color: white; font-family: 'microsoft yahei'; text-align: center;">XSTEAM 教育机构管理</h1>
+				
+			</el-header>
+			<el-container>
+				<el-aside style="width: 400px; border: 3px solid #eee">
+					<el-row style="margin-top:50px">
+						<h2 style="font-family: 'microsoft yahei'; text-align: center;">{{company}}</h2>
+						<h4 style="font-family: 'microsoft yahei'; text-align: center;">{{linkman}}</h4>
+						<h4 style="font-family: 'microsoft yahei'; text-align: center;">审核中，请稍后</h4>
+					</el-row>
+					<el-row style="text-align: center;">
+						<el-button type="danger" round icon="el-icon-error" @click="logout" style="margin-top: 100px;">登出</el-button>
+					</el-row>
+				</el-aside>
+
+				<el-main style="border: 3px solid #eee">
+					
+
+					<el-steps :active="1" align-center style="margin-top: 200px;" finish-status="success" process-status="process">
+					  <el-step title="提交信息" description="在线提交机构相关信息并上传相关文件" ></el-step>
+					  <el-step title="等待审核" description="等待相关信息经平台审核" ></el-step>
+					  <el-step title="添加课程" description="审核完成后可以在平台上进行课程的添加与查看" ></el-step>
+					  <el-step title="小程序同步" description="平台上添加完成的课程将同步显示在微信小程序中"></el-step>
+					</el-steps>				
+					</el-main>
+			</el-container>
+
+		</el-container>
+	</div>
+
+</body>
+</html>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+
+        },
+        
+		methods:{
+			logout(){
+				window.location.href = '/login/'
+			}
+		
+		},
+		
+		computed:{
+
+		},
+    })
+</script>

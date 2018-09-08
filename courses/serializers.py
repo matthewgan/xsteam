@@ -26,3 +26,9 @@ class CourseDetailShowSerializer(serializers.ModelSerializer):
         model = Course
         fields = ('code', 'name', 'showcase', 'price', 'vendor_logo', 'vendor_name', 'vendor_location', 'vendor_tel', 'service', 'review_point'
                   , 'review_number', 'description', 'detail')
+
+
+class CourseTableShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('name', 'code', 'price',)
