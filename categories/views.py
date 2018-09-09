@@ -16,7 +16,7 @@ class CategoryListView(generics.ListAPIView):
 class CategoryCourseListView(APIView):
     def get_objects(self, pk):
         try:
-            return Course.objects.filter(pk=pk)
+            return Course.objects.filter(categoryID=pk)
         except Course.DoesNotExist:
             return Http404
 
