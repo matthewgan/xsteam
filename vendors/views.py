@@ -71,7 +71,7 @@ def register(request):
                     auth.login(request, re)  # 登陆成功
                     return redirect('/home/')  # 跳转--redirect指从一个旧的url转到一个新的url
             except:
-                return redirect('/register/')
+                return redirect('/login/')
 
     else:
         # 如果不是post提交数据，就不传参数创建对象，并将对象返回给前台，直接生成input标签，内容为空
